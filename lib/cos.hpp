@@ -59,11 +59,13 @@ std::vector<float> cosmos::dl(const std::vector<float> &z)
         u4 = Ez(t0 + dt);
         f1 = f0 + dt / 6.0 * (u1 + 2 * u2 + 2 * u3 + u4);
         f0 = f1;
-        for (auto &&i : v)
+        for (size_t j = 0; j < z.size(); j++)
         {
-            
+            if (abs(j - t0 - dt) <= dt / 2.0) {
+                results[j] = f1;
+            }
         }
-        
+        return results;
     }
     
 
