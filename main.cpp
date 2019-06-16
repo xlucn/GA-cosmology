@@ -27,6 +27,33 @@ int main(int argc, char const *argv[])
     map.add(16, 0, 1); // Omega_m
     map.add(16, 0, 1); // Omega_r
 
+    // Create the genome
+    GABin2DecGenome genome(map, objective);
+
+    // Create GA with the genome
+    GASimpleGA ga(genome);
+
+    // usr sigma truncation scaling when the scores might be negative
+    GASigmaTruncationScaling scale;
+    ga.scaling(scale);
+
+    ga.populationSize(popsize);
+    ga.nGenerations(ngen);
+    //ga.pConvergence(pconv);
+    //ga.nConvergence(nconv);
+    //ga.terminator(GAGeneticAlgorithm::TerminateUponConvergence);
+    ga.pMutation(pmut);
+    ga.pCrossover(pcross);
+    ga.scoreFilename("score.dat");
+    ga.scoreFrequency(1);
+    ga.flushFrequency(50);
+
+    // Evolve and output the results
+    ga.evolve();
+    genome = ga.statistics().bestIndividual();
+    std::cout << "the list contains " << genome.size() << " nodes\n";
+    std::cout << "the ga used the parameters:\n" << ga.parameters() << "\n";
+
     return 0;
 }
 
