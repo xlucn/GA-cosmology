@@ -4,26 +4,26 @@
 #include <sstream>
 #include <iostream>
 
-class data
+class Data
 {
 private:
-    std::vector<float> z;
-    std::vector<float> mu;
-    std::vector<float> sigma;
+    std::vector<double> z;
+    std::vector<double> mu;
+    std::vector<double> sigma;
 public:
-    data(std::ifstream &in);
-    std::vector<float> getz() {return z;}
-    std::vector<float> getmu() {return mu;}
-    std::vector<float> getsigma() {return sigma;}
+    Data(std::ifstream &in);
+    std::vector<double> getz() {return z;}
+    std::vector<double> getmu() {return mu;}
+    std::vector<double> getsigma() {return sigma;}
     void print();
-    ~data();
+    ~Data();
 };
 
-data::data(std::ifstream &in)
+Data::Data(std::ifstream &in)
 {
     std::string line;
     char comma;
-    float zi, mui, sigmai;
+    double zi, mui, sigmai;
     while (in)
     {
         in >> zi >> comma >> mui >> comma >> sigmai;
@@ -33,15 +33,15 @@ data::data(std::ifstream &in)
     }
 }
 
-void data::print()
+void Data::print()
 {
     for (size_t i = 0; i < z.size(); i++)
     {
-        std::cout << z[i] << " " << mu[i] << " " << sigma[i] << "\n";
+        std::cout << z[i] << " " << mu[i] << " " << sigma[i];
     }
     
 }
 
-data::~data()
+Data::~Data()
 {
 }

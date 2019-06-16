@@ -3,32 +3,32 @@
 #include <math.h>
 #include <algorithm>
 
-class cosmos
+class Cosmos
 {
 private:
-    float h0, Om, Or, Od;
-    float dt;
+    double h0, Om, Or, Od;
+    double dt;
 
 public:
-    cosmos();
-    cosmos(float h0_, float Om_, float Or_, float dt_ = 0.00001) : h0(h0_), Om(Om_), Or(Or_), Od(1 - Om_ - Or_), dt(dt_) {}
-    float Ez(const float &z);
-    float dl(const float &z);
-    std::vector<float> dl(const std::vector<float> &z);
-    ~cosmos();
+    Cosmos();
+    Cosmos(double h0_, double Om_, double Or_, double dt_ = 0.00001) : h0(h0_), Om(Om_), Or(Or_), Od(1 - Om_ - Or_), dt(dt_) {}
+    double Ez(const double &z);
+    double dl(const double &z);
+    std::vector<double> dl(const std::vector<double> &z);
+    ~Cosmos();
 };
 
-float cosmos::Ez(const float &z)
+double Cosmos::Ez(const double &z)
 {
     return 1 / sqrt(Od + Om * pow(1 + z, 3)); 
 }
 
-float cosmos::dl(const float &z)
+double Cosmos::dl(const double &z)
 {
     int numberInt = z / dt;
-    float f0 = 0, f1;
-    float t0;
-    float u1, u2, u3, u4;
+    double f0 = 0;
+    double t0;
+    double u1, u2, u3, u4;
     for (size_t i = 0; i < numberInt; i++)
     {
         t0 = i * dt;
@@ -36,20 +36,19 @@ float cosmos::dl(const float &z)
         u2 = Ez(t0 + dt / 2.0);
         u3 = Ez(t0 + dt / 2.0);
         u4 = Ez(t0 + dt);
-        f1 = f0 + dt / 6.0 * (u1 + 2 * u2 + 2 * u3 + u4);
-        f0 = f1;
+        f0 = f0 + dt / 6.0 * (u1 + 2 * u2 + 2 * u3 + u4);
     }
-    return f1;
+    return f0 * 3e5 * z;
 }
 
-std::vector<float> cosmos::dl(const std::vector<float> &z)
+std::vector<double> Cosmos::dl(const std::vector<double> &z)
 {
     auto maxz = *std::max_element(std::begin(z), std::end(z));
     int numberInt = maxz / dt;
-    std::vector<float> results(z.size());
-    float u1, u2, u3, u4;
-    float f0 = 0, f1;
-    float t0;
+    std::vector<double> results(z.size());
+    double u1, u2, u3, u4;
+    double f0 = 0;
+    double t0;
     for (size_t i = 0; i < numberInt; i++)
     {
         t0 = i * dt;
@@ -57,20 +56,18 @@ std::vector<float> cosmos::dl(const std::vector<float> &z)
         u2 = Ez(t0 + dt / 2.0);
         u3 = Ez(t0 + dt / 2.0);
         u4 = Ez(t0 + dt);
-        f1 = f0 + dt / 6.0 * (u1 + 2 * u2 + 2 * u3 + u4);
-        f0 = f1;
+        f0 = f0 + dt / 6.0 * (u1 + 2 * u2 + 2 * u3 + u4);
+        if (i == 0) {std::cout << f0 << std::endl;}
         for (size_t j = 0; j < z.size(); j++)
         {
-            if (abs(j - t0 - dt) <= dt / 2.0) {
-                results[j] = f1;
+            if (abs(z[j] - t0 - dt) <= dt / 2) {
+                results[j] = f0 * z[j] * 3e5;
             }
         }
-        return results;
     }
-    
-
+    return results;
 }
 
-cosmos::~cosmos()
+Cosmos::~Cosmos()
 {
 }
