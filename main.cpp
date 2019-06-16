@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <lib/cos.hpp>
 #include <ga/ga.h>
 
 float objective(GAGenome &);
