@@ -38,7 +38,7 @@ float Cosmos::dl(const float &z)
         u4 = Ez(t0 + dt);
         f0 = f0 + dt / 6.0 * (u1 + 2 * u2 + 2 * u3 + u4);
     }
-    return f0 * 3e5 * z;
+    return f0 * 3e5 * (1 + z);
 }
 
 std::vector<float> Cosmos::dl(const std::vector<float> &z)
@@ -60,7 +60,7 @@ std::vector<float> Cosmos::dl(const std::vector<float> &z)
         for (size_t j = 0; j < z.size(); j++)
         {
             if (abs(z[j] - t0 - dt) <= dt / 2) {
-                results[j] = f0 * z[j] * 3e5;
+                results[j] = f0 * (1 + z[j]) * 3e5;
             }
         }
     }

@@ -34,7 +34,7 @@ int main(int argc, char const *argv[])
 float objective(GAGenome & c)
 {
     GABin2DecGenome & genome = (GABin2DecGenome &) c;
-    float h0 = genome.phenotype(0); 
+    float h0 = genome.phenotype(0) * 100; 
     float Om = genome.phenotype(1);
     float Or = genome.phenotype(2);
     float Od = 1 - Om - Or;
@@ -46,7 +46,7 @@ float objective(GAGenome & c)
     sigma = Ia.getsigma();
     for (size_t i = 0; i < muth.size(); i++)
     {
-        muth[i] = muth[i] / h0 / 100;
+        muth[i] = muth[i] / h0;
         muth[i] = 5 * log10(muth[i]) + 25;
     }
     float A = 0, B = 0, C = 0;
