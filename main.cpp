@@ -52,8 +52,36 @@ int main(int argc, char const *argv[])
     ga.scoreFrequency(1);
     ga.flushFrequency(5);
 
-    // Evolve and output the results
-    ga.evolve();
+    // whether to output each generation's population data
+    int iPlot = 0;
+    GAPopulation pop;
+    float h0, Om, Or;
+    if(iPlot)
+    {
+        // Export result of each step
+        FILE *fpop = fopen("pops.dat", "w");
+        ga.initialize();
+        while(ga.done() == gaFalse)
+        {
+            ga.step();
+            fprintf(fpop, "%d\n", popsize);
+            pop = ga.population();
+            for(int i = 0; i < pop.size(); i++)
+            {
+                h0 = ((GABin2DecGenome&)(pop.individual(i))).phenotype(0);
+                Om = ((GABin2DecGenome&)(pop.individual(i))).phenotype(1);
+                Or = ((GABin2DecGenome&)(pop.individual(i))).phenotype(2);
+                fprintf(fpop, "%f %f %f\n", h0, Om, Or);
+                fflush(fpop);
+            }
+        }
+        fclose(fpop);
+    }
+    else
+    {
+        // Evolve and output the results
+        ga.evolve();
+    }
     genome = ga.statistics().bestIndividual();
     std::cout << "the list contains " << genome.size() << " nodes\n\n";
     std::cout << "Result: h0 = " << genome.phenotype(0) << "; ";
