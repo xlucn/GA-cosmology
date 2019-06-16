@@ -56,6 +56,13 @@ std::vector<float> cosmos::dl(const std::vector<float> &z)
         u1 = Ez(t0);
         u2 = Ez(t0 + dt / 2.0);
         u3 = Ez(t0 + dt / 2.0);
+        u4 = Ez(t0 + dt);
+        f1 = f0 + dt / 6.0 * (u1 + 2 * u2 + 2 * u3 + u4);
+        f0 = f1;
+        for (auto &&i : v)
+        {
+            
+        }
         
     }
     
