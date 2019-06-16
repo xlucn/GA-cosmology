@@ -55,7 +55,10 @@ int main(int argc, char const *argv[])
     // Evolve and output the results
     ga.evolve();
     genome = ga.statistics().bestIndividual();
-    std::cout << "the list contains " << genome.size() << " nodes\n";
+    std::cout << "the list contains " << genome.size() << " nodes\n\n";
+    std::cout << "Result: h0 = " << genome.phenotype(0) << "; ";
+    std::cout << "Om = " << genome.phenotype(1) << "; ";
+    std::cout << "Or = " << genome.phenotype(2) << "\n\n";
     std::cout << "the ga used the parameters:\n" << ga.parameters() << "\n";
 
     return 0;
