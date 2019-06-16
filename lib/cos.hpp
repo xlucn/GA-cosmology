@@ -53,14 +53,15 @@ std::vector<double> Cosmos::dl(const std::vector<double> &z)
     {
         t0 = i * dt;
         u1 = Ez(t0);
-        u2 = Ez(t0 + dt / 2.0);
-        u3 = Ez(t0 + dt / 2.0);
+        // u2 = Ez(t0 + dt / 2.0);
+        // u3 = Ez(t0 + dt / 2.0);
         u4 = Ez(t0 + dt);
-        f0 = f0 + dt / 6.0 * (u1 + 2 * u2 + 2 * u3 + u4);
+        // f0 = f0 + dt / 6.0 * (u1 + 2 * u2 + 2 * u3 + u4);
+        f0 = f0 + dt / 2.0 * (u1 + u4);
         if (i == 0) {std::cout << f0 << std::endl;}
         for (size_t j = 0; j < z.size(); j++)
         {
-            if (abs(z[j] - t0 - dt) <= dt / 2) {
+            if (abs(z[j] - t0 - dt) <= dt) {
                 results[j] = f0 * z[j] * 3e5;
             }
         }

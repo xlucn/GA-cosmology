@@ -27,26 +27,6 @@ int main(int argc, char const *argv[])
     map.add(16, 0, 1); // Omega_m
     map.add(16, 0, 1); // Omega_r
 
-    // test code
-    Cosmos cos(0.70, 0.3, 0.00);
-    std::vector<double> muth, muobs, sigma;
-    muth = cos.dl(Ia.getz());
-    muobs = Ia.getmu();
-    sigma = Ia.getsigma();
-    for (size_t i = 0; i < muth.size(); i++)
-    {
-        muth[i] = muth[i] / 70;
-        muth[i] = 5 * log10(muth[i]) + 25;
-    }
-    double A = 0, B = 0, C = 0;
-    for (size_t i = 0; i < muth.size(); i++)
-    {
-        A += (muth[i] - muobs[i]) * (muth[i] - muobs[i]) / sigma[i] / sigma[i];
-        B += (muobs[i] - muth[i]) / sigma[i] * sigma[i];
-        C += 1 / sigma[i] * sigma[i];
-    }
-    std::cout << "The chi-2 is " << A << std::endl;
-
     return 0;
 }
 
