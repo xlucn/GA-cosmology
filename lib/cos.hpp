@@ -11,7 +11,7 @@ private:
 
 public:
     cosmos();
-    cosmos(float h0_, float Om_, float Or_, float dt_ = 0.001) : h0(h0_), Om(Om_), Or(Or_), Od(1 - Om_ - Or_), dt(dt_) {}
+    cosmos(float h0_, float Om_, float Or_, float dt_ = 0.00001) : h0(h0_), Om(Om_), Or(Or_), Od(1 - Om_ - Or_), dt(dt_) {}
     float Ez(const float &z);
     float dl(const float &z);
     std::vector<float> dl(const std::vector<float> &z);

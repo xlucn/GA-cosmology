@@ -11,7 +11,7 @@ private:
     std::vector<float> mu;
     std::vector<float> sigma;
 public:
-    data(std::ifstream in);
+    data(std::ifstream &in);
     std::vector<float> getz() {return z;}
     std::vector<float> getmu() {return mu;}
     std::vector<float> getsigma() {return sigma;}
@@ -19,7 +19,7 @@ public:
     ~data();
 };
 
-data::data(std::ifstream in)
+data::data(std::ifstream &in)
 {
     std::string line;
     char comma;
@@ -37,7 +37,7 @@ void data::print()
 {
     for (size_t i = 0; i < z.size(); i++)
     {
-        std::cout << z[i] << " " << mu[i] << " " << sigma[i];
+        std::cout << z[i] << " " << mu[i] << " " << sigma[i] << "\n";
     }
     
 }

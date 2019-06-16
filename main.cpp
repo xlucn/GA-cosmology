@@ -1,7 +1,11 @@
 #include <iostream>
 #include <fstream>
-#include <lib/cos.hpp>
+#include "lib/cos.hpp"
+#include "lib/data.hpp"
 #include <ga/ga.h>
+
+std::ifstream datafile("data/C11.csv", std::ios::in);
+data Ia(datafile);
 
 float objective(GAGenome &);
 
@@ -21,6 +25,8 @@ int main(int argc, char const *argv[])
     map.add(16, 0, 1); // Omega_m
     map.add(16, 0, 1); // Omega_r
 
+    // test code
+    Ia.print();
 
     return 0;
 }
