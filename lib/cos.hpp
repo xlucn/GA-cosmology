@@ -20,7 +20,7 @@ public:
 
 float Cosmos::Ez(const float &z)
 {
-    return 1 / sqrt(Od + Om * pow(1 + z, 3)); 
+    return 1 / sqrt(Od + Om * pow(1 + z, 3) + Or * pow(1 + z, 4)); 
 }
 
 float Cosmos::dl(const float &z)
@@ -53,15 +53,13 @@ std::vector<float> Cosmos::dl(const std::vector<float> &z)
     {
         t0 = i * dt;
         u1 = Ez(t0);
-        // u2 = Ez(t0 + dt / 2.0);
-        // u3 = Ez(t0 + dt / 2.0);
+        u2 = Ez(t0 + dt / 2.0);
+        u3 = Ez(t0 + dt / 2.0);
         u4 = Ez(t0 + dt);
-        // f0 = f0 + dt / 6.0 * (u1 + 2 * u2 + 2 * u3 + u4);
-        f0 = f0 + dt / 2.0 * (u1 + u4);
-        if (i == 0) {std::cout << f0 << std::endl;}
+        f0 = f0 + dt / 6.0 * (u1 + 2 * u2 + 2 * u3 + u4);
         for (size_t j = 0; j < z.size(); j++)
         {
-            if (abs(z[j] - t0 - dt) <= dt) {
+            if (abs(z[j] - t0 - dt) <= dt / 2) {
                 results[j] = f0 * z[j] * 3e5;
             }
         }
