@@ -16,8 +16,10 @@ int main(int argc, char const *argv[])
     std::cout << "This program is try to solve the cosmology\n";
 
     // Declare variables for the GA parameters and set them to some default value.
-    int popsize = 30;
-    int ngen = 100;
+    int popsize = 16;
+    //int ngen = 100;
+    float pconv = 0.97;
+    int nconv = 3;
     float pmut = 0.01;
     int pcross = 0.6;
 
@@ -38,15 +40,17 @@ int main(int argc, char const *argv[])
     ga.scaling(scale);
 
     ga.populationSize(popsize);
-    ga.nGenerations(ngen);
-    //ga.pConvergence(pconv);
-    //ga.nConvergence(nconv);
-    //ga.terminator(GAGeneticAlgorithm::TerminateUponConvergence);
+
+    //ga.nGenerations(ngen);
+    ga.pConvergence(pconv);
+    ga.nConvergence(nconv);
+    ga.terminator(GAGeneticAlgorithm::TerminateUponConvergence);
+
     ga.pMutation(pmut);
     ga.pCrossover(pcross);
     ga.scoreFilename("score.dat");
     ga.scoreFrequency(1);
-    ga.flushFrequency(50);
+    ga.flushFrequency(5);
 
     // Evolve and output the results
     ga.evolve();
