@@ -7,14 +7,14 @@
 class Data
 {
 private:
-    std::vector<double> z;
-    std::vector<double> mu;
-    std::vector<double> sigma;
+    std::vector<float> z;
+    std::vector<float> mu;
+    std::vector<float> sigma;
 public:
     Data(std::ifstream &in);
-    std::vector<double> getz() {return z;}
-    std::vector<double> getmu() {return mu;}
-    std::vector<double> getsigma() {return sigma;}
+    std::vector<float> getz() {return z;}
+    std::vector<float> getmu() {return mu;}
+    std::vector<float> getsigma() {return sigma;}
     void print();
     ~Data();
 };
@@ -23,7 +23,7 @@ Data::Data(std::ifstream &in)
 {
     std::string line;
     char comma;
-    double zi, mui, sigmai;
+    float zi, mui, sigmai;
     while (in)
     {
         in >> zi >> comma >> mui >> comma >> sigmai;

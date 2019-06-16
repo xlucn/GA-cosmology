@@ -9,7 +9,7 @@
 std::ifstream datafile("data/C11.csv", std::ios::in);
 Data Ia(datafile);
 
-double objective(GAGenome &);
+float objective(GAGenome &);
 
 int main(int argc, char const *argv[])
 {
@@ -18,7 +18,7 @@ int main(int argc, char const *argv[])
     // Declare variables for the GA parameters and set them to some default value.
     int popsize = 30;
     int ngen = 100;
-    double pmut = 0.01;
+    float pmut = 0.01;
     int pcross = 0.6;
 
     // 2DecPhenotype
@@ -31,16 +31,16 @@ int main(int argc, char const *argv[])
 }
 
 // This function tries to maximize the value of the function
-double objective(GAGenome & c)
+float objective(GAGenome & c)
 {
     GABin2DecGenome & genome = (GABin2DecGenome &) c;
-    double h0 = genome.phenotype(0); 
-    double Om = genome.phenotype(1);
-    double Or = genome.phenotype(2);
-    double Od = 1 - Om - Or;
+    float h0 = genome.phenotype(0); 
+    float Om = genome.phenotype(1);
+    float Or = genome.phenotype(2);
+    float Od = 1 - Om - Or;
 
     Cosmos cos(h0, Om, Or);
-    std::vector<double> muth, muobs, sigma;
+    std::vector<float> muth, muobs, sigma;
     muth = cos.dl(Ia.getz());
     muobs = Ia.getmu();
     sigma = Ia.getsigma();
@@ -49,7 +49,7 @@ double objective(GAGenome & c)
         muth[i] = muth[i] / h0 / 100;
         muth[i] = 5 * log10(muth[i]) + 25;
     }
-    double A = 0, B = 0, C = 0;
+    float A = 0, B = 0, C = 0;
     for (size_t i = 0; i < muth.size(); i++)
     {
         A += (muth[i] - muobs[i]) * (muth[i] - muobs[i]) / sigma[i] / sigma[i];

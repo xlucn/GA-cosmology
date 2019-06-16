@@ -6,29 +6,29 @@
 class Cosmos
 {
 private:
-    double h0, Om, Or, Od;
-    double dt;
+    float h0, Om, Or, Od;
+    float dt;
 
 public:
     Cosmos();
-    Cosmos(double h0_, double Om_, double Or_, double dt_ = 0.00001) : h0(h0_), Om(Om_), Or(Or_), Od(1 - Om_ - Or_), dt(dt_) {}
-    double Ez(const double &z);
-    double dl(const double &z);
-    std::vector<double> dl(const std::vector<double> &z);
+    Cosmos(float h0_, float Om_, float Or_, float dt_ = 0.00001) : h0(h0_), Om(Om_), Or(Or_), Od(1 - Om_ - Or_), dt(dt_) {}
+    float Ez(const float &z);
+    float dl(const float &z);
+    std::vector<float> dl(const std::vector<float> &z);
     ~Cosmos();
 };
 
-double Cosmos::Ez(const double &z)
+float Cosmos::Ez(const float &z)
 {
     return 1 / sqrt(Od + Om * pow(1 + z, 3)); 
 }
 
-double Cosmos::dl(const double &z)
+float Cosmos::dl(const float &z)
 {
     int numberInt = z / dt;
-    double f0 = 0;
-    double t0;
-    double u1, u2, u3, u4;
+    float f0 = 0;
+    float t0;
+    float u1, u2, u3, u4;
     for (size_t i = 0; i < numberInt; i++)
     {
         t0 = i * dt;
@@ -41,14 +41,14 @@ double Cosmos::dl(const double &z)
     return f0 * 3e5 * z;
 }
 
-std::vector<double> Cosmos::dl(const std::vector<double> &z)
+std::vector<float> Cosmos::dl(const std::vector<float> &z)
 {
     auto maxz = *std::max_element(std::begin(z), std::end(z));
     int numberInt = maxz / dt;
-    std::vector<double> results(z.size());
-    double u1, u2, u3, u4;
-    double f0 = 0;
-    double t0;
+    std::vector<float> results(z.size());
+    float u1, u2, u3, u4;
+    float f0 = 0;
+    float t0;
     for (size_t i = 0; i < numberInt; i++)
     {
         t0 = i * dt;
