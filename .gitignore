@@ -37,3 +37,6 @@ example/*
 
 # vscode configure
 .vscode/*
+
+# results
+score.dat
