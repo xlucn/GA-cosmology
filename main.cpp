@@ -16,8 +16,10 @@ int main(int argc, char const *argv[])
     std::cout << "This program is try to solve the cosmology\n";
 
     // Declare variables for the GA parameters and set them to some default value.
-    int popsize = 30;
-    int ngen = 100;
+    int popsize = 16;
+    //int ngen = 100;
+    float pconv = 0.97;
+    int nconv = 3;
     float pmut = 0.01;
     int pcross = 0.6;
 
@@ -38,20 +40,53 @@ int main(int argc, char const *argv[])
     ga.scaling(scale);
 
     ga.populationSize(popsize);
-    ga.nGenerations(ngen);
-    //ga.pConvergence(pconv);
-    //ga.nConvergence(nconv);
-    //ga.terminator(GAGeneticAlgorithm::TerminateUponConvergence);
+
+    //ga.nGenerations(ngen);
+    ga.pConvergence(pconv);
+    ga.nConvergence(nconv);
+    ga.terminator(GAGeneticAlgorithm::TerminateUponConvergence);
+
     ga.pMutation(pmut);
     ga.pCrossover(pcross);
     ga.scoreFilename("score.dat");
     ga.scoreFrequency(1);
-    ga.flushFrequency(50);
+    ga.flushFrequency(5);
 
-    // Evolve and output the results
-    ga.evolve();
+    // whether to output each generation's population data
+    int iPlot = 0;
+    GAPopulation pop;
+    float h0, Om, Or;
+    if(iPlot)
+    {
+        // Export result of each step
+        FILE *fpop = fopen("pops.dat", "w");
+        ga.initialize();
+        while(ga.done() == gaFalse)
+        {
+            ga.step();
+            fprintf(fpop, "%d\n", popsize);
+            pop = ga.population();
+            for(int i = 0; i < pop.size(); i++)
+            {
+                h0 = ((GABin2DecGenome&)(pop.individual(i))).phenotype(0);
+                Om = ((GABin2DecGenome&)(pop.individual(i))).phenotype(1);
+                Or = ((GABin2DecGenome&)(pop.individual(i))).phenotype(2);
+                fprintf(fpop, "%f %f %f\n", h0, Om, Or);
+                fflush(fpop);
+            }
+        }
+        fclose(fpop);
+    }
+    else
+    {
+        // Evolve and output the results
+        ga.evolve();
+    }
     genome = ga.statistics().bestIndividual();
-    std::cout << "the list contains " << genome.size() << " nodes\n";
+    std::cout << "the list contains " << genome.size() << " nodes\n\n";
+    std::cout << "Result: h0 = " << genome.phenotype(0) << "; ";
+    std::cout << "Om = " << genome.phenotype(1) << "; ";
+    std::cout << "Or = " << genome.phenotype(2) << "\n\n";
     std::cout << "the ga used the parameters:\n" << ga.parameters() << "\n";
 
     return 0;
