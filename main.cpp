@@ -24,10 +24,10 @@ int main(int argc, char const *argv[])
     // Declare variables for the GA parameters and set them to some default value.
     int popsize = 16;
     // int ngen = 100;
-    float pconv = 0.97;
+    float pconv = 0.99;
     int nconv = 3;
-    float pmut = 0.01;
-    int pcross = 0.6;
+    float pmut = 0.1;
+    float pcross = 0.6;
 
     // 2DecPhenotype
     GABin2DecPhenotype map;
