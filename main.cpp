@@ -11,13 +11,19 @@ Data Ia(datafile);
 
 float objective(GAGenome &);
 
+float score(float h0, float Om, float Or);
+
 int main(int argc, char const *argv[])
 {
     std::cout << "This program is try to solve the cosmology\n";
 
+    // test code
+    // std::cout << score(0.7, 0.3, 0.001) << std::endl;
+    // return 0;
+
     // Declare variables for the GA parameters and set them to some default value.
     int popsize = 16;
-    //int ngen = 100;
+    // int ngen = 100;
     float pconv = 0.97;
     int nconv = 3;
     float pmut = 0.01;
@@ -25,9 +31,9 @@ int main(int argc, char const *argv[])
 
     // 2DecPhenotype
     GABin2DecPhenotype map;
-    map.add(16, 0, 1); // reduced hubble paramter
-    map.add(16, 0, 1); // Omega_m
-    map.add(16, 0, 1); // Omega_r
+    map.add(16, 0.5, 1); // reduced hubble paramter
+    map.add(16, 0, 0.5); // Omega_m
+    map.add(16, 0, 0.01); // Omega_r
 
     // Create the genome
     GABin2DecGenome genome(map, objective);
@@ -41,7 +47,7 @@ int main(int argc, char const *argv[])
 
     ga.populationSize(popsize);
 
-    //ga.nGenerations(ngen);
+    // ga.nGenerations(ngen);
     ga.pConvergence(pconv);
     ga.nConvergence(nconv);
     ga.terminator(GAGeneticAlgorithm::TerminateUponConvergence);
@@ -121,3 +127,26 @@ float objective(GAGenome & c)
     return - (A - B * B / C);
 }
 
+float score(float h0, float Om, float Or)
+{
+    float Od = 1 - Om - Or;
+
+    Cosmos cos(h0, Om, Or);
+    std::vector<float> muth, muobs, sigma;
+    muth = cos.dl(Ia.getz());
+    muobs = Ia.getmu();
+    sigma = Ia.getsigma();
+    for (size_t i = 0; i < muth.size(); i++)
+    {
+        muth[i] = muth[i] / h0 / 100;
+        muth[i] = 5 * log10(muth[i]) + 25;
+    }
+    float A = 0, B = 0, C = 0;
+    for (size_t i = 0; i < muth.size(); i++)
+    {
+        A += (muth[i] - muobs[i]) * (muth[i] - muobs[i]) / sigma[i] / sigma[i];
+        B += (muobs[i] - muth[i]) / sigma[i] * sigma[i];
+        C += 1 / sigma[i] * sigma[i];
+    }
+    return - (A - B * B / C);
+}
