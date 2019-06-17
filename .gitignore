@@ -39,4 +39,8 @@ example/*
 .vscode/*
 
 # results
-score.dat
+*.dat
+
+# image files
+*.png
+*.gif
