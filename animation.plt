@@ -10,10 +10,9 @@ set origin 0.0, 0.0
 
 # file names
 POPFILE="pops.dat"
-MAINSRC="main.cpp"
 
-# read axix ranges from source file
-LIMITS=system("awk -F'[,)]' '/map.add/{print $2 $3}' " . MAINSRC)
+# read axix ranges from data output
+LIMITS=system("head -n 2 " . POPFILE . " | tail -n 1")
 P1MIN=real(word(LIMITS, 1))
 P1MAX=real(word(LIMITS, 2))
 P2MIN=real(word(LIMITS, 3))

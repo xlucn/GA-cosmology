@@ -16,8 +16,6 @@ float score(float h0, float Om, float Or);
 
 int main(int argc, char *argv[])
 {
-    std::cout << "This program is try to solve the cosmology\n";
-
     // test code
     // std::cout << score(0.7, 0.3, 0.001) << std::endl;
     // return 0;
@@ -50,6 +48,9 @@ int main(int argc, char *argv[])
             exit(EXIT_FAILURE);
         }
     }
+
+    std::cout << "This program is try to solve the cosmology\n";
+    std::cout << "For usage infomation, use " << argv[0] << " -h\n";
 
 
     // parameters for generation or convergence termination
@@ -104,6 +105,10 @@ int main(int argc, char *argv[])
         // Export result of each step
         FILE *fpop = fopen("pops.dat", "w");
         fprintf(fpop, "%d\n", popsize);
+        fprintf(fpop, "%f %f %f %f %f %f\n",
+                      map.min(0), map.max(0),
+                      map.min(1), map.max(1),
+                      map.min(2), map.max(2));
         ga.initialize(GARandomInt());
         while(ga.done() == gaFalse)
         {
@@ -127,11 +132,11 @@ int main(int argc, char *argv[])
         ga.evolve();
     }
     genome = ga.statistics().bestIndividual();
-    std::cout << "the list contains " << genome.size() << " nodes\n\n";
+    std::cout << "\nthe list contains " << genome.size() << " nodes\n";
+    std::cout << "the ga used the parameters:\n" << ga.parameters() << "\n";
     std::cout << "Result: h0 = " << genome.phenotype(0) << "; ";
     std::cout << "Om = " << genome.phenotype(1) << "; ";
-    std::cout << "Or = " << genome.phenotype(2) << "\n\n";
-    std::cout << "the ga used the parameters:\n" << ga.parameters() << "\n";
+    std::cout << "Or = " << genome.phenotype(2) << "\n";
 
     return 0;
 }
