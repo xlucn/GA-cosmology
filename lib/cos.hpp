@@ -49,6 +49,7 @@ std::vector<float> Cosmos::dl(const std::vector<float> &z)
     float u1, u2, u3, u4;
     float f0 = 0;
     float t0;
+    int j = 0;
     for (size_t i = 0; i < numberInt; i++)
     {
         t0 = i * dt;
@@ -57,12 +58,24 @@ std::vector<float> Cosmos::dl(const std::vector<float> &z)
         u3 = Ez(t0 + dt / 2.0);
         u4 = Ez(t0 + dt);
         f0 = f0 + dt / 6.0 * (u1 + 2 * u2 + 2 * u3 + u4);
-        for (size_t j = 0; j < z.size(); j++)
-        {
-            if (abs(z[j] - t0 - dt) <= dt / 2) {
-                results[j] = f0 * (1 + z[j]) * 3e5;
+        // The z has been sorted.
+        if (abs(z[j] - t0 - dt) <= dt / 2) {
+            results[j] = f0 * (1 + z[j]) * 3e5;
+            j += 1;
+            while (abs(z[j] - z[j - 1]) < 1e-7) {
+                results[j] = results[j - 1];
+                j += 1;
             }
         }
+
+
+
+        // for (size_t j = 0; j < z.size(); j++)
+        // {
+        //     if (abs(z[j] - t0 - dt) <= dt / 2) {
+        //         results[j] = f0 * (1 + z[j]) * 3e5;
+        //     }
+        // }
     }
     return results;
 }
