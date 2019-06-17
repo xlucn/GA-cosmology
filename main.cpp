@@ -103,11 +103,11 @@ int main(int argc, char *argv[])
     {
         // Export result of each step
         FILE *fpop = fopen("pops.dat", "w");
+        fprintf(fpop, "%d\n", popsize);
         ga.initialize(GARandomInt());
         while(ga.done() == gaFalse)
         {
             ga.step();
-            fprintf(fpop, "%d\n", popsize);
             pop = ga.population();
             for(int i = 0; i < pop.size(); i++)
             {
