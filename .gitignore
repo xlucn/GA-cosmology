@@ -44,3 +44,9 @@ example/*
 # image files
 *.png
 *.gif
+
+# videos
+*.mp4
+
+# local galib files
+galib/
