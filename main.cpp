@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     }
 
     std::cout << "This program is try to solve the cosmology\n";
-    std::cout << "For usage infomation, use " << argv[0] << " -h\n";
+    std::cout << "For more usage information, use " << argv[0] << " -h\n";
 
 
     // parameters for generation or convergence termination
@@ -59,14 +59,14 @@ int main(int argc, char *argv[])
     int nconv = 30;
     // Declare variables for the GA parameters and set them to some default value.
     int popsize = 30;
-    float pmut = 0.1;
+    float pmut = 0.01;
     float pcross = 0.6;
 
 
     // 2DecPhenotype
     GABin2DecPhenotype map;
-    map.add(16, 0.5, 1); // reduced hubble paramter
-    map.add(16, 0, 0.5); // Omega_m
+    map.add(16, 0.6934, 0.7052); // reduced hubble paramter
+    map.add(16, 0.2636, 0.3252); // Omega_m
     map.add(16, 0, 0.01); // Omega_r
 
     // Create the genome
