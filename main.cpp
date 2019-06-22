@@ -27,6 +27,22 @@ void export_population(FILE *fpop, const GAPopulation& pop)
     }
 }
 
+/* Initialize population in a confined region */
+void special_init(const GAPopulation& pop)
+{
+    for(int i = 0; i < pop.size(); i++)
+    {
+        GABin2DecGenome& genome = (GABin2DecGenome&)(pop.individual(i));
+        GABin2DecPhenotype pheno = genome.phenotypes();
+        for(int j = 0; j < genome.nPhenotypes(); j++)
+            genome.phenotype(
+                j,
+                GARandomFloat(pheno.min(j) * 0.8 + pheno.max(j) * 0.2,
+                              pheno.min(j) * 0.9 + pheno.max(j) * 0.1)
+            );
+    }
+}
+
 int main(int argc, char *argv[])
 {
     // test code
@@ -38,6 +54,8 @@ int main(int argc, char *argv[])
     int TermMethod = 1;
     // whether to output each generation's population data
     int iPlotPops = 1;
+    // Initial method
+    int SpecialInit = 0;
     // GA type
     // 1: Simple
     // 2: SteadyState
@@ -48,6 +66,9 @@ int main(int argc, char *argv[])
     char opt;
     while ((opt = getopt(argc, argv, "hIpPa:t:")) != -1) {
         switch (opt) {
+        case 'I':
+            SpecialInit = 1;
+            break;
         case 'p':
             iPlotPops = 1;
             break;
@@ -73,6 +94,7 @@ int main(int argc, char *argv[])
                 "-p\toutput population data for each generation"
                     "(default on).\n"
                 "-P\ttrun -p off\n"
+                "-I\tspecial initialization method(only when -p or no -P)\n"
                 "GAparameters\tcommand-line parameters for GAlib. For details "
                   "see\n\thttp://lancet.mit.edu/galib-2.4/API.html#defparms\n",
                 argv[0]);
@@ -167,7 +189,13 @@ int main(int argc, char *argv[])
                       map.min(0), map.max(0),
                       map.min(1), map.max(1),
                       map.min(2), map.max(2));
-        ga.initialize(GARandomInt());
+
+        if(SpecialInit)
+            /* TODO: DemeGA */
+            special_init(ga.population());
+        else
+            ga.initialize(GARandomInt());
+
         while(ga.done() == gaFalse)
         {
             ga.step();
