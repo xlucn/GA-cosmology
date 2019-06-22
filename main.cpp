@@ -14,6 +14,19 @@ float objective(GAGenome &);
 
 float score(float h0, float Om, float Or);
 
+void export_population(FILE *fpop, const GAPopulation& pop)
+{
+    float h0, Om, Or;
+    for(int i = 0; i < pop.size(); i++)
+    {
+        h0 = ((GABin2DecGenome&)(pop.individual(i))).phenotype(0);
+        Om = ((GABin2DecGenome&)(pop.individual(i))).phenotype(1);
+        Or = ((GABin2DecGenome&)(pop.individual(i))).phenotype(2);
+        fprintf(fpop, "%f %f %f\n", h0, Om, Or);
+        fflush(fpop);
+    }
+}
+
 int main(int argc, char *argv[])
 {
     // test code
@@ -24,13 +37,25 @@ int main(int argc, char *argv[])
     // 1: generation. 2: convergence
     int TermMethod = 1;
     // whether to output each generation's population data
-    int iPlotPops = 0;
+    int iPlotPops = 1;
+    // GA type
+    // 1: Simple
+    // 2: SteadyState
+    // 3: Incremental
+    // 4: Deme
+    int WhichGA = 1;
     // Read commandline argumets
     char opt;
-    while ((opt = getopt(argc, argv, "hpt:")) != -1) {
+    while ((opt = getopt(argc, argv, "hIpPa:t:")) != -1) {
         switch (opt) {
         case 'p':
             iPlotPops = 1;
+            break;
+        case 'P':
+            iPlotPops = 0;
+            break;
+        case 'a':
+            WhichGA = atoi(optarg);
             break;
         case 't':
             TermMethod = atoi(optarg);
@@ -39,11 +64,17 @@ int main(int argc, char *argv[])
         default: /* '?' */
             fprintf(stderr, "Usage: %s [-t 1 or 2] [-p] [GAparameters]\n"
                 "-t\t1 for terminate upon specified generations.(default)\n"
-                "\t2 for terminate upon convergence.\n"
+                  "\t2 for terminate upon convergence.\n"
+                "-a\tGA type\n"
+                  "\t1: Simple (default)\n"
+                  "\t2: SteadyState\n"
+                  "\t3: Incremental\n"
+                  "\t4: Deme\n"
                 "-p\toutput population data for each generation"
-                "(default off).\n"
+                    "(default on).\n"
+                "-P\ttrun -p off\n"
                 "GAparameters\tcommand-line parameters for GAlib. For details "
-                "see\n\thttp://lancet.mit.edu/galib-2.4/API.html#defparms\n",
+                  "see\n\thttp://lancet.mit.edu/galib-2.4/API.html#defparms\n",
                 argv[0]);
             exit(EXIT_FAILURE);
         }
@@ -65,14 +96,42 @@ int main(int argc, char *argv[])
 
     // 2DecPhenotype
     GABin2DecPhenotype map;
-    map.add(16, 0.6934, 0.7052); // reduced hubble paramter
-    map.add(16, 0.2636, 0.3252); // Omega_m
+    map.add(16, 0.5, 1); // reduced hubble paramter
+    map.add(16, 0, 0.5); // Omega_m
     map.add(16, 0, 0.01); // Omega_r
 
     // Create the genome
     GABin2DecGenome genome(map, objective);
     // Create GA with the genome
     GASimpleGA ga(genome);
+    switch(WhichGA)
+    {
+    case 2:
+        {
+        GASteadyStateGA ga(genome);
+        ga.pReplacement(0.5);
+        }
+        break;
+    case 3:
+        {
+        GAIncrementalGA ga(genome);
+        ga.nOffspring(2);  /* 1(default) or 2 */
+        }
+        break;
+    case 4:
+        std::cerr << "Have bugs with Deme GA.\n";
+        return 1;
+        {
+        GADemeGA ga(genome);
+        ga.nReplacement(5);
+        ga.nMigration(5);
+        }
+        break;
+    case 1:
+    default:
+        break;
+    }
+
     // usr sigma truncation scaling when the scores might be negative
     GASigmaTruncationScaling scale;
     ga.scaling(scale);
@@ -94,12 +153,11 @@ int main(int argc, char *argv[])
         ga.nConvergence(nconv);
         ga.terminator(GAGeneticAlgorithm::TerminateUponConvergence);
     }
+    /* read GAlib arguments from commandline */
     ga.parameters(argc, argv);
 
 
     // Evaluation
-    GAPopulation pop;
-    float h0, Om, Or;
     if(iPlotPops)
     {
         // Export result of each step
@@ -113,14 +171,15 @@ int main(int argc, char *argv[])
         while(ga.done() == gaFalse)
         {
             ga.step();
-            pop = ga.population();
-            for(int i = 0; i < pop.size(); i++)
+            if(WhichGA == 4)
             {
-                h0 = ((GABin2DecGenome&)(pop.individual(i))).phenotype(0);
-                Om = ((GABin2DecGenome&)(pop.individual(i))).phenotype(1);
-                Or = ((GABin2DecGenome&)(pop.individual(i))).phenotype(2);
-                fprintf(fpop, "%f %f %f\n", h0, Om, Or);
-                fflush(fpop);
+                GADemeGA *demega = (GADemeGA*)&ga;
+                for(int p = 0; p < demega->nPopulations(); p++)
+                    export_population(fpop, demega->population(p));
+            }
+            else
+            {
+                export_population(fpop, ga.population());
             }
         }
         fclose(fpop);
