@@ -9,7 +9,7 @@ set size 0.75, 0.8
 set origin 0.2, 0.15
 
 # file names
-POPFILE="pops.dat"
+POPFILE="pops-result.dat"
 MCFILE="data/mcmcdist.csv"
 
 # read axix ranges from data output
@@ -25,7 +25,7 @@ NGEN=(int(system("wc " . POPFILE . " | awk '{print $1}'")) - 1)/POPSIZE
 unset key
 
 set ylabel "Ω_m"
-set xlabel "H_0"
+set xlabel "h_0"
 set xtics P1MIN, (P1MAX-P1MIN)/5, P1MAX
 set ytics P2MIN, (P2MAX-P2MIN)/5, P2MAX
 set xrange[P1MIN:P1MAX]
@@ -46,6 +46,5 @@ do for [i=1:NGEN] {
     #splot MCFILE using 1:2:3 with lines
     unset view
     unset contour
-    set label "AC" at (P1MIN+P1MAX)/2, (P2MIN+P2MAX)/2
     plot POPFILE every ::POPSIZE*(i-1)+2::POPSIZE*i+1 using 1:2 pt 7 ps 1 not, "contours.dat" u 1:2  w l
 }

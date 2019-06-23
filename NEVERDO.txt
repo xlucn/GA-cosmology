@@ -1,0 +1,19 @@
+label in result
+change different GA with cli arg
+change initial region with cli arg
+
+script:
+
+change different GA
+make && ./a.out && gnuplot animation.plt && mv cosmos.gif cosmos-gasimple.gif
+make && ./a.out && gnuplot animation.plt && mv cosmos.gif cosmos-gass.gif
+make && ./a.out && gnuplot animation.plt && mv cosmos.gif cosmos-gainc.gif
+
+change initial region
+make && ./a.out -I pmut 0 && gnuplot animation.plt && mv cosmos.gif cosmos-initcenter.gif
+make && ./a.out -I pmut 0 && gnuplot animation.plt && mv cosmos.gif cosmos-initnomut.gif
+make && ./a.out -I pmut 0.001 && gnuplot animation.plt && mv cosmos.gif cosmos-initlowmut.gif
+make && ./a.out -I pmut 0.01 && gnuplot animation.plt && mv cosmos.gif cosmos-init.gif
+
+make && ./a.out pcross 0 pmut 0 && gnuplot animation.plt && mv cosmos.gif cosmos-nocrossmut.gif
+make && ./a.out pmut 0 && gnuplot animation.plt && mv cosmos.gif cosmos-nomut.gif
