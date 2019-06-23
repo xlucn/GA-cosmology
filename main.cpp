@@ -37,8 +37,10 @@ void special_init(const GAPopulation& pop)
         for(int j = 0; j < genome.nPhenotypes(); j++)
             genome.phenotype(
                 j,
-                GARandomFloat(pheno.min(j) * 0.8 + pheno.max(j) * 0.2,
-                              pheno.min(j) * 0.9 + pheno.max(j) * 0.1)
+                GARandomFloat(pheno.min(j) * 1.0 + pheno.max(j) * 0.0,
+                              pheno.min(j) * 0.7 + pheno.max(j) * 0.3)
+                //GARandomFloat(pheno.min(j) * 0.7 + pheno.max(j) * 0.3,
+                              //pheno.min(j) * 0.3 + pheno.max(j) * 0.7)
             );
     }
 }
@@ -146,7 +148,7 @@ int main(int argc, char *argv[])
     case 2:
         {
         GASteadyStateGA ga(genome);
-        ga.pReplacement(0.5);
+        ga.nReplacement(1);
         }
         break;
     case 3:

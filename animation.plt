@@ -35,7 +35,7 @@ do for [i=1:NGEN] {
     set ylabel "Ω_r"
     set xrange[P1MIN:P1MAX]
     set yrange[P3MIN:P3MAX]
-    plot POPFILE every ::POPSIZE*(i-1)+2::POPSIZE*i+1 using 1:3
+    plot POPFILE every ::POPSIZE*(i-1)+2::POPSIZE*i+1 using 1:3 pt 7 ps 1
 
     set size 0.4, 0.4
     set origin 0.55, 0.15
@@ -45,7 +45,7 @@ do for [i=1:NGEN] {
     unset ytics
     set xrange[P2MIN:P2MAX]
     set yrange[P3MIN:P3MAX]
-    plot POPFILE every ::POPSIZE*(i-1)+2::POPSIZE*i+1 using 2:3
+    plot POPFILE every ::POPSIZE*(i-1)+2::POPSIZE*i+1 using 2:3 pt 7 ps 1
 
     set size 0.4, 0.4
     set origin 0.15, 0.55
@@ -55,7 +55,7 @@ do for [i=1:NGEN] {
     unset xtics
     set xrange[P1MIN:P1MAX]
     set yrange[P2MIN:P2MAX]
-    plot POPFILE  every ::POPSIZE*(i-1)+2::POPSIZE*i+1 using 1:2
+    plot POPFILE  every ::POPSIZE*(i-1)+2::POPSIZE*i+1 using 1:2 pt 7 ps 1
 
     unset multiplot
 }

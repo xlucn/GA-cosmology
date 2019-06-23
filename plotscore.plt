@@ -1,5 +1,5 @@
 # gnuplot script
-set terminal png
+set terminal png enhanced
 set xlabel "generations"
 set output "scores.png"
 set key right center
