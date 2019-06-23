@@ -54,6 +54,8 @@ int main(int argc, char *argv[])
     int TermMethod = 1;
     // whether to output each generation's population data
     int iPlotPops = 1;
+    // MCMC region
+    int MCMC = 0;
     // Initial method
     int SpecialInit = 0;
     // GA type
@@ -64,10 +66,13 @@ int main(int argc, char *argv[])
     int WhichGA = 1;
     // Read commandline argumets
     char opt;
-    while ((opt = getopt(argc, argv, "hIpPa:t:")) != -1) {
+    while ((opt = getopt(argc, argv, "hImpPa:t:")) != -1) {
         switch (opt) {
         case 'I':
             SpecialInit = 1;
+            break;
+        case 'm':
+            MCMC = 1;
             break;
         case 'p':
             iPlotPops = 1;
@@ -84,16 +89,17 @@ int main(int argc, char *argv[])
         case 'h':
         default: /* '?' */
             fprintf(stderr, "Usage: %s [-t 1 or 2] [-p] [GAparameters]\n"
-                "-t\t1 for terminate upon specified generations.(default)\n"
-                  "\t2 for terminate upon convergence.\n"
+                //"-t\t1 for terminate upon specified generations.(default)\n"
+                  //"\t2 for terminate upon convergence.\n"
                 "-a\tGA type\n"
                   "\t1: Simple (default)\n"
                   "\t2: SteadyState\n"
                   "\t3: Incremental\n"
                   "\t4: Deme\n"
-                "-p\toutput population data for each generation"
-                    "(default on).\n"
-                "-P\ttrun -p off\n"
+                "-m\tset the same region as MCMC exported data\n"
+                //"-p\toutput population data for each generation"
+                    //"(default on).\n"
+                //"-P\ttrun -p off\n"
                 "-I\tspecial initialization method(only when -p or no -P)\n"
                 "GAparameters\tcommand-line parameters for GAlib. For details "
                   "see\n\thttp://lancet.mit.edu/galib-2.4/API.html#defparms\n",
@@ -118,9 +124,18 @@ int main(int argc, char *argv[])
 
     // 2DecPhenotype
     GABin2DecPhenotype map;
-    map.add(16, 0.5, 1); // reduced hubble paramter
-    map.add(16, 0, 0.5); // Omega_m
-    map.add(16, 0, 0.01); // Omega_r
+    if(MCMC)
+    {
+        map.add(16, 0.6934, 0.7052); // reduced hubble paramter
+        map.add(16, 0.2636, 0.3252); // Omega_m
+        map.add(16, 0, 0.01); // Omega_r
+    }
+    else
+    {
+        map.add(32, 0.5, 1); // reduced hubble paramter
+        map.add(32, 0, 0.5); // Omega_m
+        map.add(32, 0, 0.01); // Omega_r
+    }
 
     // Create the genome
     GABin2DecGenome genome(map, objective);
@@ -184,7 +199,7 @@ int main(int argc, char *argv[])
     {
         // Export result of each step
         FILE *fpop = fopen("pops.dat", "w");
-        fprintf(fpop, "%d\n", popsize);
+        fprintf(fpop, "%d\n", ga.populationSize());
         fprintf(fpop, "%f %f %f %f %f %f\n",
                       map.min(0), map.max(0),
                       map.min(1), map.max(1),
